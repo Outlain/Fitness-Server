@@ -6,11 +6,13 @@ import bcrypt from 'bcrypt';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import validator from 'validator';
+import bodyParser from 'body-parser';
 
 dotenv.config()
 
 const app = express()
 app.use(cors())
+app.use(bodyParser.json());
 
 // Use middleware to parse request bodies and cookies
 app.use(express.json())
@@ -49,12 +51,6 @@ function attemptFitnessConnection() {
 }
 attemptFitnessConnection();
 
-connection.connect((err) => {
-    if (err) {
-        console.error(err.message);
-    }
-    console.log('Connected to the fitness database.');
-});
 
 // Set up session middleware
 app.use(session({
@@ -64,7 +60,7 @@ app.use(session({
 }));
 
 // Start the server
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
 
@@ -79,6 +75,9 @@ app.listen(port, () => {
 //         console.error(err.message);
 //     }
 // });
+app.get('/', (req, res) => {
+    res.json('Hello')
+})
 
 app.post('/register', (req, res) => {
     const { username, password, email } = req.body;
